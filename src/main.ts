@@ -10,25 +10,25 @@ import { Game, Types } from "phaser";
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 1920,
-    height: 1080,
+    width: 1080,
+    height: 1920,
     parent: 'game-container',
-    backgroundColor: '#000000',
+    backgroundColor: '#EEEEEE',
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         // min: {
-        //     width: 960,
-        //     height: 540
+        //     width: 540,
+        //     height: 960
         // },
         // max: {
-        //     width: 1920,
-        //     height: 1080
+        //     width: 1080,
+        //     height: 1920
         // },
         // snap: {
-        //     width: 960,
-        //     height: 540
-        // }
+        //     width: 540,
+        //     height: 960
+        // },
     },
     scene: [
         Boot,

@@ -31,7 +31,7 @@ export class Game extends Scene {
         // console.log('isLandscape >> ', this.isLandscape);
 
         // update game size for portrait mode
-        this.updateGameSize();
+        // this.updateGameSize();
     }
 
     private updateGameSize() {
@@ -61,12 +61,11 @@ export class Game extends Scene {
 
         if (this.currentOrienation !== orientation) {
             this.currentOrienation = this.scale.orientation;
-            this.updateGameSize();
-            this.scale.refresh();
-
-            // redraw 
-            // this.cleanupLayout();
-            this.cameras.main.fadeIn(800, 0, 0, 0);
+            // this.updateGameSize();
+            // this.scale.refresh();
+            // // redraw 
+            // // this.cleanupLayout();
+            // this.cameras.main.fadeIn(800, 0, 0, 0);
         }
 
         this.scale.refresh();
