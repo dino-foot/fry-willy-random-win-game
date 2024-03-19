@@ -17,12 +17,15 @@ export class MainMenu extends Scene {
     init() {
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
+        this.cameras.main.setBackgroundColor(0x00defc);
     }
 
     create() {
         this.camera = this.cameras.main;
-        this.background = this.add.image(this.camera.centerX, this.camera.centerY, 'background');
-        this.background.setOrigin(0.5);
+
+        // const cloud = this.add.image(200, 300, 'cloud').setOrigin(0.5).setDepth(0);
+        // this.background = this.add.image(this.camera.centerX, this.camera.centerY, 'background');
+        // this.background.setOrigin(0.5);
 
 
         this.logo = this.add.image(0, 0, 'logo');
@@ -39,9 +42,11 @@ export class MainMenu extends Scene {
         this.text.setOrigin(0.5);
         this.text.setStyle({wordWrap: { width: 500 }, align: 'center'});
         
-        // this.input.once('pointerdown', () => {
-        //     this.scene.start('Game');
-        // });
+
+        this.text =  this.addText('click anywhere to start ', this.camera.centerX, this.camera.centerY + 300, '#000000', 30);
+        this.input.once('pointerdown', () => {
+            this.scene.start('Game');
+        });
     }
 
     private addText(text: string, x: number, y: number, color: string, size: number) {
