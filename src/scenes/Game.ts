@@ -39,6 +39,10 @@ export class Game extends Scene {
         this.currentScore = 0;
         this.frierList = []
         this.cameras.main.setBackgroundColor(0x00defc);
+
+        // this.input.setDefaultCursor('url(assets/input/cursors/blue.cur), pointer');
+        // const sprite = this.add.sprite(400, 300, 'eye').setInteractive({ cursor: 'url(assets/input/cursors/pen.cur), pointer' });
+
     }
 
     create() {
@@ -47,6 +51,9 @@ export class Game extends Scene {
         this.createBackground();
         this.createFriers()
 
+        // create chicken
+        this.createChicken();
+        
         this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.5);
         Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 300);
 
@@ -62,6 +69,34 @@ export class Game extends Scene {
         this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
         this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
 
+    }
+
+    private createChicken() {
+        this.chicken = this.add.image(200, 700, 'chicken_willy').setDepth(6).setOrigin(0.5).setInteractive();
+        this.chicken.setScale(0.125);
+        this.input.setDraggable(this.chicken);
+
+
+        this.input.on('dragstart', (pointer, gameObject, dragX, dragY) =>
+        {
+            gameObject.x = pointer.x;
+            gameObject.y = pointer.y;
+            console.log('#dragstart');
+        });
+
+        this.input.on('dragend', (pointer, gameObject, dragX, dragY) =>
+        {
+            gameObject.x = gameObject.input.dragStartX;
+            gameObject.y = gameObject.input.dragStartY;
+            console.log('#dragend');
+        });
+
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) =>
+        {
+            gameObject.x = pointer.x;
+            gameObject.y = pointer.y;
+            console.log('#drag');
+        });
     }
 
     private addLogo() {
@@ -82,8 +117,9 @@ export class Game extends Scene {
         let offsetX = 320;
         for (let i = 0; i < 3; i++) {
             const text = this.addText((i + 1).toString(), offsetX * i + 200, 960).setDepth(5);
-            const fier = this.add.image(offsetX * i + 200, 1100, 'frier').setOrigin(0.5).setDepth(4).setScale(0.5);
-            this.frierList.push(fier);
+            const frier = this.add.image(offsetX * i + 200, 1100, 'frier').setOrigin(0.5).setDepth(4).setScale(0.5);
+            frier.setInteractive();
+            this.frierList.push(frier);
         }
         // Actions.AlignTo(this.frierList, Display.Align.RIGHT_CENTER);
     }
