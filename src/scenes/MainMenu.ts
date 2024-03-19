@@ -44,9 +44,10 @@ export class MainMenu extends Scene {
         
 
         this.text =  this.addText('click anywhere to start ', this.camera.centerX, this.camera.centerY + 300, '#000000', 30);
-        this.input.once('pointerdown', () => {
-            this.scene.start('Game');
-        });
+        this.scene.start('Game');
+        // this.input.once('pointerdown', () => {
+        //     this.scene.start('Game');
+        // });
     }
 
     private addText(text: string, x: number, y: number, color: string, size: number) {
