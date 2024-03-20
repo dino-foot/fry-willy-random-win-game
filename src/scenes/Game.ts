@@ -105,19 +105,16 @@ export class Game extends Scene {
             for (var i = 0; i < this.frierList.length; i++) {
                 // Check if the gameObject overlaps with the current frier
                 if (Phaser.Geom.Rectangle.Contains(this.frierList[i].getBounds(), gameObject.x, gameObject.y)) {
-                    // Store the index of the overlapped frier
                     overlappedIndex = i;
-                    // Exit the loop since we found the overlapped frier
                     break;
                 }
             }
 
-            // Check if an overlapped frier was found
             if (overlappedIndex !== -1) {
                 // Move the chicken to the position of the overlapped frier
                 this.chicken.x = this.frierList[overlappedIndex].x;
                 this.chicken.y = this.frierList[overlappedIndex].y;
-                console.log('overlap ' + overlappedIndex);
+                this.handleChickenDrop();
             } else {
                 // If no overlapped frier was found, reset the position of the gameObject
                 gameObject.x = gameObject.input.dragStartX;
@@ -131,6 +128,13 @@ export class Game extends Scene {
             gameObject.y = pointer.y;
             // console.log('#ondrag');
         });
+    }
+
+    handleChickenDrop(){
+        // todo spawn nugget
+        //  spawn nugget on plate
+
+        console.log('handle chicken');
     }
 
     private addLogo() {
