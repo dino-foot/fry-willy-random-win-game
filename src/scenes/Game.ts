@@ -41,7 +41,7 @@ export class Game extends Scene {
         this.frierList = []
         this.cameras.main.setBackgroundColor(0x00defc);
 
-        // this.input.setDefaultCursor('url(assets/input/cursors/blue.cur), pointer');
+        this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
         // const sprite = this.add.sprite(400, 300, 'eye').setInteractive({ cursor: 'url(assets/input/cursors/pen.cur), pointer' });
 
     }
@@ -54,14 +54,11 @@ export class Game extends Scene {
         const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
         PhaserHelpers.addRoundedRectangle(rectConfig, this);
 
-        // this.createFriers()
+        this.createFriers()
 
         // create chicken
-        // this.createChicken();
+        this.createChicken();
         
-        // this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.5);
-        // Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 300);
-
         let maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 130, 1370, 440, 0x000000);
         maskRect.setStrokeStyle(20, 0x000000);
         maskRect.setVisible(true);
@@ -86,8 +83,9 @@ export class Game extends Scene {
     }
 
     private createChicken() {
-        this.chicken = this.add.image(200, 700, 'chicken_willy').setDepth(6).setOrigin(0.5).setInteractive();
-        this.chicken.setScale(0.125);
+        this.chicken = this.add.image(450, 450, 'chicken_willy').setDepth(6).setOrigin(0.5);
+        this.chicken.setInteractive();
+        this.chicken.setScale(0.12);
         this.input.setDraggable(this.chicken);
 
 
@@ -109,7 +107,7 @@ export class Game extends Scene {
         {
             gameObject.x = pointer.x;
             gameObject.y = pointer.y;
-            console.log('#drag');
+            console.log('#ondrag');
         });
     }
 
@@ -127,13 +125,18 @@ export class Game extends Scene {
 
     private createFriers() {
 
-        let offsetX = 320;
+        let offsetX = 400;
         for (let i = 0; i < 3; i++) {
-            const text = this.addText((i + 1).toString(), offsetX * i + 200, 960).setDepth(5);
-            const frier = this.add.image(offsetX * i + 200, 1100, 'frier').setOrigin(0.5).setDepth(4).setScale(0.5);
+            const text = this.addText((i + 1).toString(), offsetX * i + 600, 680, '#fecb37', 60).setDepth(6);
+            text.setStroke('#000000', 15);
+            const frier = this.add.image(offsetX * i + 550, 750, 'frier').setOrigin(0.5).setDepth(4).setScale(0.35);
             frier.setInteractive();
             this.frierList.push(frier);
         }
+
+        this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.3);
+        Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 120);
+
         // Actions.AlignTo(this.frierList, Display.Align.RIGHT_CENTER);
     }
 
