@@ -27,7 +27,6 @@ export class MainMenu extends Scene {
         // this.background = this.add.image(this.camera.centerX, this.camera.centerY, 'background');
         // this.background.setOrigin(0.5);
 
-
         this.logo = this.add.image(0, 0, 'logo');
         this.logo.setScale(0.5).setDepth(1);
         Display.Align.In.TopCenter(this.logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, 200);
@@ -44,7 +43,7 @@ export class MainMenu extends Scene {
         
 
         this.text =  this.addText('click anywhere to start ', this.camera.centerX, this.camera.centerY + 300, '#000000', 30);
-        this.scene.start('Game');
+        // this.scene.start('Game');
         // this.input.once('pointerdown', () => {
         //     this.scene.start('Game');
         // });

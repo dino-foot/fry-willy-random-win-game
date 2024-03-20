@@ -6,7 +6,7 @@ export class Preloader extends Scene {
     }
 
     init() {
-        this.load.on('complete', () => { this.scene.start('MainMenu') }, this);
+        // this.load.on('complete', () => { this.scene.start('MainMenu') }, this);
         this.addLoadingBar();
     }
 
@@ -53,7 +53,18 @@ export class Preloader extends Scene {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.image('background', 'bg.png');
+        this.load.image('bg-mobile', 'bg-mobile.png');
+        this.load.image('bg-desktop', 'bg-desktop.png');
+        this.load.image('chicken-wings', 'chicken-wings.png');
+        this.load.image('connect-wallet', 'connect-wallet.png');
+        this.load.image('nuggets_1', 'nuggets_1.png');
+        this.load.image('nuggets_2', 'nuggets_2.png');
+        this.load.image('pattern-desktop', 'pattern-desktop.png');
+        this.load.image('pattern-mobile', 'pattern-mobile.png');
+        this.load.image('play-again', 'play-again.png');
+        this.load.image('sky_desktop', 'sky_desktop.png');
+        this.load.image('sky_mobile', 'sky_mobile.png');
+        this.load.image('you-win', 'you-win.png');
         
         this.load.image('chicken_willy', 'chicken_willy.png');
         this.load.image('frier', 'frier.png');

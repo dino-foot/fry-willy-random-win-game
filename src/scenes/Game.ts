@@ -107,7 +107,7 @@ export class Game extends Scene {
     }
 
     private createBackground() {
-        this.background = this.add.image(this.camera.centerX / 2 - 200, this.camera.centerY / 2 - (this.gameHeight / 10), 'background').setOrigin(0).setDepth(1);
+        this.background = this.add.image(this.camera.centerX / 2 - 200, this.camera.centerY / 2 - (this.gameHeight / 10), 'background-mobile').setOrigin(0).setDepth(1);
         // Display.Align.In.Center(this.background, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight));
         this.background.setDisplaySize(950, 640)
     }
