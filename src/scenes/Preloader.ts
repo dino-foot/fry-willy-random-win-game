@@ -6,7 +6,7 @@ export class Preloader extends Scene {
     }
 
     init() {
-        // this.load.on('complete', () => { this.scene.start('MainMenu') }, this);
+        this.load.on('complete', () => { this.scene.start('MainMenu') }, this);
         this.addLoadingBar();
     }
 
