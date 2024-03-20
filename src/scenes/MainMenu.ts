@@ -49,6 +49,8 @@ export class MainMenu extends Scene {
         this.text.setOrigin(0.5);
         this.text.setStyle({ wordWrap: { width: 800 }, align: 'center' });
 
+        // debug
+        this.scene.start('Game');
     }
 
     handleConnectWallet() {

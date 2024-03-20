@@ -62,14 +62,26 @@ export class Game extends Scene {
         // this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.5);
         // Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 300);
 
-        // const maskRect = this.add.rectangle(this.camera.centerX / 2 + 275, this.camera.centerY / 2 + 130, 940, 633, 0x000000);
-        // maskRect.setStrokeStyle(20, 0x000000);
-        // maskRect.setVisible(true);
-        // const mask = maskRect.createGeometryMask();
-        // this.background.setMask(mask);
+        let maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 130, 1370, 440, 0x000000);
+        maskRect.setStrokeStyle(20, 0x000000);
+        maskRect.setVisible(true);
+        let mask = maskRect.createGeometryMask();
 
-        // this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
-        // this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
+        const bg = this.add.image(this.camera.centerX, this.camera.centerY - 130, 'bg-desktop').setOrigin(0.5).setDepth(1);
+        bg.setScale(1.4)
+        bg.setMask(mask);
+
+        maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 525, 1370, 340, 0x000000);
+        maskRect.setStrokeStyle(20, 0x000000);
+        maskRect.setVisible(false);
+        mask = maskRect.createGeometryMask();
+
+        const pattern = this.add.image(this.camera.centerX, this.camera.centerY - 70, 'pattern-desktop').setOrigin(0.5).setDepth(1);
+        pattern.setScale(1.25);
+        pattern.setMask(mask);
+
+        this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
+        this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
 
     }
 
@@ -103,7 +115,7 @@ export class Game extends Scene {
 
     private addLogo() {
         this.logo = this.add.image(0, 0, 'logo');
-        this.logo.setScale(0.3).setDepth(1);
+        this.logo.setScale(0.3).setDepth(2);
         Display.Align.In.TopCenter(this.logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, 0);
         this.logo.y = 160
     }
@@ -152,7 +164,7 @@ export class Game extends Scene {
 
     private addText(text: string, x: number, y: number, color = '#000000', size = 40) {
         return this.add.text(x, y, text, {
-            fontFamily: 'Roboto-Medium',
+            fontFamily: 'NerkoOne-Regular',
             fontSize: size,
             color: color,
             align: 'left'
