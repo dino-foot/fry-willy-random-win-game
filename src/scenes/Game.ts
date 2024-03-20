@@ -6,6 +6,7 @@ import { EventsController } from '../controllers/eventsController';
 export class Game extends Scene {
     camera: Cameras.Scene2D.Camera;
     background: GameObjects.Image;
+    logo: GameObjects.Image;
 
     isDeskTop: boolean;
     isLandscape: boolean;
@@ -49,25 +50,26 @@ export class Game extends Scene {
         this.camera = this.cameras.main;
         this.addLogo();
         this.createBackground();
-        this.createFriers()
 
-        // create chicken
-        this.createChicken();
-        
-        this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.5);
-        Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 300);
-
-        const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 950, height: 1400, radius: 20, color: 0xffffff, stroke: 8, strokeColor: 0x000000 };
+        const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
         PhaserHelpers.addRoundedRectangle(rectConfig, this);
 
-        const maskRect = this.add.rectangle(this.camera.centerX / 2 + 275, this.camera.centerY / 2 + 130, 940, 633, 0x000000);
-        maskRect.setStrokeStyle(20, 0x000000);
-        maskRect.setVisible(true);
-        const mask = maskRect.createGeometryMask();
-        this.background.setMask(mask);
+        // this.createFriers()
 
-        this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
-        this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
+        // create chicken
+        // this.createChicken();
+        
+        // this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.5);
+        // Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 300);
+
+        // const maskRect = this.add.rectangle(this.camera.centerX / 2 + 275, this.camera.centerY / 2 + 130, 940, 633, 0x000000);
+        // maskRect.setStrokeStyle(20, 0x000000);
+        // maskRect.setVisible(true);
+        // const mask = maskRect.createGeometryMask();
+        // this.background.setMask(mask);
+
+        // this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
+        // this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
 
     }
 
@@ -100,16 +102,15 @@ export class Game extends Scene {
     }
 
     private addLogo() {
-        const logo = this.add.image(0, 0, 'logo');
-        logo.setScale(0.5).setDepth(2);
-        Display.Align.In.TopCenter(logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, 200);
-
+        this.logo = this.add.image(0, 0, 'logo');
+        this.logo.setScale(0.3).setDepth(1);
+        Display.Align.In.TopCenter(this.logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, 0);
+        this.logo.y = 160
     }
 
     private createBackground() {
-        this.background = this.add.image(this.camera.centerX / 2 - 200, this.camera.centerY / 2 - (this.gameHeight / 10), 'background-mobile').setOrigin(0).setDepth(1);
-        // Display.Align.In.Center(this.background, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight));
-        this.background.setDisplaySize(950, 640)
+        this.background = this.add.image(this.camera.centerX, this.camera.centerY, 'sky_desktop');
+        this.background.setOrigin(0.5);
     }
 
     private createFriers() {

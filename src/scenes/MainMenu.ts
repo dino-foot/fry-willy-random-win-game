@@ -35,7 +35,6 @@ export class MainMenu extends Scene {
         const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
         PhaserHelpers.addRoundedRectangle(rectConfig, this);
 
-
         this.connectWalletBtn = this.add.image(0, 0, 'connect-wallet').setOrigin(0.5).setScale(0.75);
         this.connectWalletBtn.setInteractive();
         this.connectWalletBtn.on('pointerdown', this.handleConnectWallet, this);
