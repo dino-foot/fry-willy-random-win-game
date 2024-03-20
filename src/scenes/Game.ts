@@ -7,6 +7,7 @@ export class Game extends Scene {
     camera: Cameras.Scene2D.Camera;
     background: GameObjects.Image;
     logo: GameObjects.Image;
+    // targetFrier: GameObjects.Image;
 
     isDeskTop: boolean;
     isLandscape: boolean;
@@ -58,7 +59,7 @@ export class Game extends Scene {
 
         // create chicken
         this.createChicken();
-        
+
         let maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 130, 1370, 440, 0x000000);
         maskRect.setStrokeStyle(20, 0x000000);
         maskRect.setVisible(true);
@@ -86,28 +87,49 @@ export class Game extends Scene {
         this.chicken = this.add.image(450, 450, 'chicken_willy').setDepth(6).setOrigin(0.5);
         this.chicken.setInteractive();
         this.chicken.setScale(0.12);
+        this.chicken.setName('chicken');
         this.input.setDraggable(this.chicken);
 
 
-        this.input.on('dragstart', (pointer, gameObject, dragX, dragY) =>
-        {
+        this.input.on('dragstart', (pointer, gameObject, dragX, dragY) => {
             gameObject.x = pointer.x;
             gameObject.y = pointer.y;
-            console.log('#dragstart');
+            // console.log('#dragstart');
         });
 
-        this.input.on('dragend', (pointer, gameObject, dragX, dragY) =>
-        {
-            gameObject.x = gameObject.input.dragStartX;
-            gameObject.y = gameObject.input.dragStartY;
-            console.log('#dragend');
+        this.input.on('dragend', (pointer, gameObject, dragX, dragY) => {
+            // Define a variable to store the index of the overlapped frier
+            let overlappedIndex = -1;
+
+            // Loop through the frierList array
+            for (var i = 0; i < this.frierList.length; i++) {
+                // Check if the gameObject overlaps with the current frier
+                if (Phaser.Geom.Rectangle.Contains(this.frierList[i].getBounds(), gameObject.x, gameObject.y)) {
+                    // Store the index of the overlapped frier
+                    overlappedIndex = i;
+                    // Exit the loop since we found the overlapped frier
+                    break;
+                }
+            }
+
+            // Check if an overlapped frier was found
+            if (overlappedIndex !== -1) {
+                // Move the chicken to the position of the overlapped frier
+                this.chicken.x = this.frierList[overlappedIndex].x;
+                this.chicken.y = this.frierList[overlappedIndex].y;
+                console.log('overlap ' + overlappedIndex);
+            } else {
+                // If no overlapped frier was found, reset the position of the gameObject
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+            // console.log('#dragend', gameObject.name);
         });
 
-        this.input.on('drag', (pointer, gameObject, dragX, dragY) =>
-        {
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
             gameObject.x = pointer.x;
             gameObject.y = pointer.y;
-            console.log('#ondrag');
+            // console.log('#ondrag');
         });
     }
 
@@ -131,7 +153,19 @@ export class Game extends Scene {
             text.setStroke('#000000', 15);
             const frier = this.add.image(offsetX * i + 550, 750, 'frier').setOrigin(0.5).setDepth(4).setScale(0.35);
             frier.setInteractive();
+            frier.setName(`frier_${i}`);
             this.frierList.push(frier);
+
+            // this.input.on('gameobjectover', (pointer, obj) => {
+            //     if(obj?.name === 'chicken') return;
+            //     this.targetFrier = obj;
+            //     console.log(obj.name)
+            // });
+
+            // this.input.on('gameobjectout', (pointer, obj) => {
+            //     this.targetFrier = null;
+            //     // console.log(obj.name)
+            // });
         }
 
         this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.3);
