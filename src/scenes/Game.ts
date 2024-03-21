@@ -1,4 +1,4 @@
-import { Scene, Cameras, Display, GameObjects, Scale, Actions } from 'phaser';
+import { Scene, Cameras, Display, GameObjects, Scale, Actions, Math } from 'phaser';
 import { PhaserHelpers } from '../helpers';
 import { ImageButton } from '../helpers/ImageButton';
 import { EventsController } from '../controllers/eventsController';
@@ -25,6 +25,7 @@ export class Game extends Scene {
     frierList: GameObjects.Image[];
     hand: GameObjects.Image;
     chicken: GameObjects.Image;
+    WIN_INDEX: number;
 
     constructor() {
         super('Game');
@@ -35,6 +36,7 @@ export class Game extends Scene {
         this.isLandscape = this.scale.orientation === Scale.Orientation.LANDSCAPE;
         this.currentOrienation = this.scale.orientation;
         // this.scale.on('orientationchange', this.checkOrientation, this); 
+
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
 
@@ -45,7 +47,6 @@ export class Game extends Scene {
 
         this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
         // const sprite = this.add.sprite(400, 300, 'eye').setInteractive({ cursor: 'url(assets/input/cursors/pen.cur), pointer' });
-
     }
 
     create() {
@@ -60,14 +61,21 @@ export class Game extends Scene {
 
         // create chicken
         this.createChicken();
+        this.createLevel();
 
+        this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
+        this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
+
+    }
+
+    private createLevel() {
         let maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 130, 1370, 440, 0x000000);
         maskRect.setStrokeStyle(20, 0x000000);
         maskRect.setVisible(true);
         let mask = maskRect.createGeometryMask();
 
         const bg = this.add.image(this.camera.centerX, this.camera.centerY - 130, 'bg-desktop').setOrigin(0.5).setDepth(1);
-        bg.setScale(1.4)
+        bg.setScale(1.4);
         bg.setMask(mask);
 
         maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 525, 1370, 340, 0x000000);
@@ -78,10 +86,6 @@ export class Game extends Scene {
         const pattern = this.add.image(this.camera.centerX, this.camera.centerY - 70, 'pattern-desktop').setOrigin(0.5).setDepth(1);
         pattern.setScale(1.25);
         pattern.setMask(mask);
-
-        this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
-        this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
-
     }
 
     private createChicken() {
@@ -115,7 +119,7 @@ export class Game extends Scene {
                 // Move the chicken to the position of the overlapped frier
                 this.chicken.x = this.frierList[overlappedIndex].x;
                 this.chicken.y = this.frierList[overlappedIndex].y;
-                this.handleChickenDrop();
+                this.handleChickenDrop(overlappedIndex);
             } else {
                 // If no overlapped frier was found, reset the position of the gameObject
                 gameObject.x = gameObject.input.dragStartX;
@@ -131,7 +135,23 @@ export class Game extends Scene {
         });
     }
 
-    handleChickenDrop() {
+    handleChickenDrop(dropIndex) {
+
+        console.log('win-index ', this.WIN_INDEX, ':: drop-index ', dropIndex);
+
+        // if loss then return
+        if (this.WIN_INDEX !== dropIndex) {
+            this.totalCredit -= 1;
+            // wrong frier reset it 
+            const frier = this.frierList[Phaser.Math.Between(0, 2)];
+            this.chicken.setPosition(frier.x, this.chicken.y - 300);
+
+            this.applyRandomWinOnFrier();
+            this.updateCreditNScore();
+
+            return;
+        }
+
         this.chicken.setVisible(false);
         const wingsKeys = ['chicken-wings', 'nuggets_1', 'nuggets_2', 'chicken-wings', 'nuggets_1'];
 
@@ -140,7 +160,7 @@ export class Game extends Scene {
             const wings = this.add.image(this.chicken.x, -200, wingsKeys[i]).setOrigin(0.5);
             wings.setDepth(10).setScale(0.75);
 
-            const randomPos = PhaserHelpers.getRandomPointAt({x: this.plate.x, y: this.plate.y}, 50);
+            const randomPos = PhaserHelpers.getRandomPointAt({ x: this.plate.x, y: this.plate.y }, 50);
             tweenPosition(this, wings, { x: randomPos.x, y: randomPos.y }, { duration: 600, delay: 100 * i });
         }
 
@@ -148,7 +168,15 @@ export class Game extends Scene {
         winText.setDepth(10);
         winText.setStroke('#000000', 10);
         Display.Align.In.BottomCenter(winText, this.plate, 0, -200);
+        this.applyRandomWinOnFrier();
+
+        this.updateCreditNScore()
         console.log('win: drop nugget chicken');
+    }
+
+    private updateCreditNScore(){
+        this.creditText.setText(`Total Credit: ${this.totalCredit}`);
+        this.scoreText.setText(`Current Score: ${this.currentScore}`);
     }
 
     private addLogo() {
@@ -179,6 +207,11 @@ export class Game extends Scene {
         Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 120);
 
         // Actions.AlignTo(this.frierList, Display.Align.RIGHT_CENTER);
+    }
+
+    applyRandomWinOnFrier() {
+        this.WIN_INDEX = Phaser.Math.Between(0, 2);
+        console.log('win index ', this.WIN_INDEX);
     }
 
     checkOrientation(orientation) {

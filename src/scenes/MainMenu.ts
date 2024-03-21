@@ -50,7 +50,7 @@ export class MainMenu extends Scene {
         this.text.setStyle({ wordWrap: { width: 800 }, align: 'center' });
 
         // debug
-        this.scene.start('GameOver');
+        this.scene.start('Game');
     }
 
     handleConnectWallet() {
