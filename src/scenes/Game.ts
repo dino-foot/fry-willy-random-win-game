@@ -39,9 +39,6 @@ export class Game extends Scene {
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
 
-        this.totalCredit = 10;
-        this.currentScore = 0;
-        this.frierList = []
         this.cameras.main.setBackgroundColor(0x00defc);
 
         this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
@@ -49,6 +46,10 @@ export class Game extends Scene {
     }
 
     create() {
+        this.totalCredit = 2;
+        this.currentScore = 0;
+        this.frierList = []
+
         this.camera = this.cameras.main;
         this.addLogo();
         this.createBackground();
@@ -154,13 +155,7 @@ export class Game extends Scene {
             tweenPosition(this, wings, { x: randomPos.x, y: randomPos.y }, { duration: 600, delay: 100 * i });
         }
 
-        if (!this.winText) {
-            this.winText = this.addText(`${this.currentScore} Willy nuggets`, 0, 0, '#fecb37', 70);
-            this.winText.setDepth(100);
-            this.winText.setStroke('#000000', 10);
-            Display.Align.In.BottomCenter(this.winText, this.plate, 0, -200);
-        }
-        this.winText.setText(`${this.currentScore} Willy nuggets`);
+        this.winText?.setText(`${this.currentScore} Willy nuggets`);
         this.updateCreditNScore()
 
         if (this.totalCredit <= 0) {
@@ -171,8 +166,8 @@ export class Game extends Scene {
 
         setTimeout(() => {
             const frier = this.frierList[Phaser.Math.Between(0, 2)];
-            this.chicken.setPosition(frier.x, this.chicken.y - 300);
-            this.chicken.setVisible(true);
+            this.chicken?.setPosition(frier.x, this.chicken.y - 300);
+            this.chicken?.setVisible(true);
         }, 1200)
 
         console.log('drop nuggets');
@@ -210,6 +205,10 @@ export class Game extends Scene {
         this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.3);
         Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 120);
 
+        this.winText = this.addText('', 0, 0, '#fecb37', 70);
+        this.winText.setDepth(100);
+        this.winText.setStroke('#000000', 10);
+        Display.Align.In.BottomCenter(this.winText, this.plate, 0, -200);
         // Actions.AlignTo(this.frierList, Display.Align.RIGHT_CENTER);
     }
 
