@@ -6,7 +6,6 @@ export class Game extends Scene {
     camera: Cameras.Scene2D.Camera;
     background: GameObjects.Image;
     logo: GameObjects.Image;
-    // targetFrier: GameObjects.Image;
 
     isDeskTop: boolean;
     isLandscape: boolean;
@@ -34,7 +33,6 @@ export class Game extends Scene {
         this.isDeskTop = this.sys.game.device.os.desktop;
         this.isLandscape = this.scale.orientation === Scale.Orientation.LANDSCAPE;
         this.currentOrienation = this.scale.orientation;
-        // this.scale.on('orientationchange', this.checkOrientation, this); 
 
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
@@ -53,7 +51,7 @@ export class Game extends Scene {
         this.camera = this.cameras.main;
         this.addLogo();
         this.createBackground();
-
+        
         const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
         PhaserHelpers.addRoundedRectangle(rectConfig, this);
 

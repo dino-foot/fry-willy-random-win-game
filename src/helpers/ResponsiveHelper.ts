@@ -1,52 +1,67 @@
 import { Scene, Scale } from "phaser";
+import { vector2 } from "../types";
 
-export class ResponsiveHelper {
-  scene: Scene;
-  isDeskTop: boolean;
-  isLandscape: boolean;
-  currentOrienation: Scale.Orientation;
-  gamewidth: number;
-  gameHeight: number;
+let scene: Scene;
+let isDeskTop: boolean;
+let isLandscape: boolean;
+let currentOrienation: Scale.Orientation;
+// let gamewidth: number;
+// let gameHeight: number;
+let resolution: vector2;
 
-  constructor(sceneObj: Scene) {
-    this.scene = sceneObj;
-
-    this.isDeskTop = this.scene.game.device.os.desktop;
-    this.isLandscape = this.scene.scale.orientation === Scale.Orientation.LANDSCAPE;
-    this.currentOrienation = this.scene.scale.orientation;
-
-    // this.scale.on('resize', this.onResize, this);
-  }
-
-  // private updateGameSize() {
-  //   if (!this.isLandscape) {
-  //     this.scale.setGameSize(720, 1600);
-  //   }
-  //   else {
-  //     this.scale.setGameSize(1920, 1080);
-  //   }
-  //   this.scale.refresh();
-  // }
-
-  private checkOrientation(orientation: Scale.Orientation) {
-    this.isLandscape = orientation === Scale.Orientation.LANDSCAPE;
-
-    if (this.currentOrienation !== orientation) {
-      this.currentOrienation = this.scene.scale.orientation;
-    }
-
-    if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
-      // handleLandscape
-    }
-    else if(!this.isDeskTop && this.currentOrienation === Scale.Orientation.PORTRAIT){
-      // handle portrait
-    }
-    else {
-      // handle desktop
-    }
-  }
-
-  private cleanupLayout() { }
-
-  private redrawLayout() { }
+interface responsiveHelperInterface {
+  init: (sceneObj: Scene, targetRes: vector2) => void;
+  updateGameSize: () => void;
+  // handleOrientationChange: (currentOrientation: Scale.Orientation, onCleanup?: () => void, onPortrait?: () => void, onLandscape?: () => void) => void;
 }
+
+const init = (sceneObj: Scene, targetRes: vector2): void => {
+  scene = sceneObj;
+  resolution = targetRes;
+  isDeskTop = scene.game.device.os.desktop;
+  isLandscape = scene.scale.orientation === Scale.Orientation.LANDSCAPE;
+  currentOrienation = scene.scale.orientation;
+  updateGameSize();
+};
+
+const updateGameSize = (): void => {
+  if (!isLandscape) {
+    scene.scale.setGameSize(720, 1600);
+  } else {
+    scene.scale.setGameSize(1920, 1080);
+  }
+  scene.scale.refresh();
+};
+
+// const handleOrientationChange = (currentOrientation: Scale.Orientation, onCleanup?: () => void, onPortrait?: () => void, onLandscape?: () => void) => {
+//   const isLandscape = scene.scale.orientation === Scale.Orientation.LANDSCAPE;
+
+//   if (currentOrientation !== scene.scale.orientation) {
+//     currentOrientation = scene.scale.orientation;
+//     console.log('cleanupsfff', this);
+//     // Update game size
+//     updateGameSize();
+
+//     // Cleanup
+//     onCleanup();
+
+//     // Transition
+//     scene.cameras.main.fadeIn(800, 0, 0, 0);
+
+//     // Handle orientation-specific logic
+//     if (!isDeskTop && currentOrientation === Scale.Orientation.LANDSCAPE) {
+//       onLandscape?.();
+//     } else if (!isDeskTop && currentOrientation === Scale.Orientation.PORTRAIT) {
+//       onPortrait?.();
+//     } else {
+//       onLandscape?.();
+//     }
+
+//   }
+// };
+
+export const ResponsiveHelper: responsiveHelperInterface = {
+  init,
+  updateGameSize,
+  // handleOrientationChange,
+};
