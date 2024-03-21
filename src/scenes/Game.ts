@@ -1,7 +1,5 @@
 import { Scene, Cameras, Display, GameObjects, Scale, Actions, Math } from 'phaser';
 import { PhaserHelpers } from '../helpers';
-import { ImageButton } from '../helpers/ImageButton';
-import { EventsController } from '../controllers/eventsController';
 import { tweenPosition } from '../helpers/TweenHelper';
 
 export class Game extends Scene {
@@ -19,7 +17,8 @@ export class Game extends Scene {
     totalCredit: number;
     currentScore: number;
     creditText: GameObjects.Text;
-    scoreText: GameObjects.Text;
+    scoreText: GameObjects.Text; // nugget count
+    winText: GameObjects.Text;
 
     plate: GameObjects.Image;
     frierList: GameObjects.Image[];
@@ -137,26 +136,17 @@ export class Game extends Scene {
 
     handleChickenDrop(dropIndex) {
 
-        console.log('win-index ', this.WIN_INDEX, ':: drop-index ', dropIndex);
-
-        // if loss then return
-        if (this.WIN_INDEX !== dropIndex) {
-            this.totalCredit -= 1;
-            // wrong frier reset it 
-            const frier = this.frierList[Phaser.Math.Between(0, 2)];
-            this.chicken.setPosition(frier.x, this.chicken.y - 300);
-
-            this.applyRandomWinOnFrier();
-            this.updateCreditNScore();
-
-            return;
-        }
+        this.totalCredit -= 1;
 
         this.chicken.setVisible(false);
         const wingsKeys = ['chicken-wings', 'nuggets_1', 'nuggets_2', 'chicken-wings', 'nuggets_1'];
 
         // drop nugget on the plate
-        for (let i = 0; i < 5; i++) {
+        const randomNuggets = Phaser.Math.Between(0, 5);
+        console.log('random nugget ', randomNuggets)
+        this.currentScore += randomNuggets;
+
+        for (let i = 0; i < randomNuggets; i++) {
             const wings = this.add.image(this.chicken.x, -200, wingsKeys[i]).setOrigin(0.5);
             wings.setDepth(10).setScale(0.75);
 
@@ -164,17 +154,31 @@ export class Game extends Scene {
             tweenPosition(this, wings, { x: randomPos.x, y: randomPos.y }, { duration: 600, delay: 100 * i });
         }
 
-        const winText = this.addText('5 Willy nuggets', 0, 0, '#fecb37', 70);
-        winText.setDepth(10);
-        winText.setStroke('#000000', 10);
-        Display.Align.In.BottomCenter(winText, this.plate, 0, -200);
-        this.applyRandomWinOnFrier();
-
+        if (!this.winText) {
+            this.winText = this.addText(`${this.currentScore} Willy nuggets`, 0, 0, '#fecb37', 70);
+            this.winText.setDepth(100);
+            this.winText.setStroke('#000000', 10);
+            Display.Align.In.BottomCenter(this.winText, this.plate, 0, -200);
+        }
+        this.winText.setText(`${this.currentScore} Willy nuggets`);
         this.updateCreditNScore()
+
+        if (this.totalCredit <= 0) {
+            // all credit finished
+            this.scene.start('GameOver');
+            return;
+        }
+
+        setTimeout(() => {
+            const frier = this.frierList[Phaser.Math.Between(0, 2)];
+            this.chicken.setPosition(frier.x, this.chicken.y - 300);
+            this.chicken.setVisible(true);
+        }, 1200)
+
         console.log('win: drop nugget chicken');
     }
 
-    private updateCreditNScore(){
+    private updateCreditNScore() {
         this.creditText.setText(`Total Credit: ${this.totalCredit}`);
         this.scoreText.setText(`Current Score: ${this.currentScore}`);
     }
@@ -207,11 +211,6 @@ export class Game extends Scene {
         Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 120);
 
         // Actions.AlignTo(this.frierList, Display.Align.RIGHT_CENTER);
-    }
-
-    applyRandomWinOnFrier() {
-        this.WIN_INDEX = Phaser.Math.Between(0, 2);
-        console.log('win index ', this.WIN_INDEX);
     }
 
     checkOrientation(orientation) {
