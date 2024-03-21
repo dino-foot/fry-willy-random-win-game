@@ -2,6 +2,7 @@ import { Scene, Cameras, Display, GameObjects, Scale, Actions } from 'phaser';
 import { PhaserHelpers } from '../helpers';
 import { ImageButton } from '../helpers/ImageButton';
 import { EventsController } from '../controllers/eventsController';
+import { tweenPosition } from '../helpers/TweenHelper';
 
 export class Game extends Scene {
     camera: Cameras.Scene2D.Camera;
@@ -130,11 +131,24 @@ export class Game extends Scene {
         });
     }
 
-    handleChickenDrop(){
-        // todo spawn nugget
-        //  spawn nugget on plate
+    handleChickenDrop() {
+        this.chicken.setVisible(false);
+        const wingsKeys = ['chicken-wings', 'nuggets_1', 'nuggets_2', 'chicken-wings', 'nuggets_1'];
 
-        console.log('handle chicken');
+        // drop nugget on the plate
+        for (let i = 0; i < 5; i++) {
+            const wings = this.add.image(this.chicken.x, -200, wingsKeys[i]).setOrigin(0.5);
+            wings.setDepth(10).setScale(0.75);
+
+            const randomPos = PhaserHelpers.getRandomPointAt({x: this.plate.x, y: this.plate.y}, 50);
+            tweenPosition(this, wings, { x: randomPos.x, y: randomPos.y }, { duration: 600, delay: 100 * i });
+        }
+
+        const winText = this.addText('5 Willy nuggets', 0, 0, '#fecb37', 70);
+        winText.setDepth(10);
+        winText.setStroke('#000000', 10);
+        Display.Align.In.BottomCenter(winText, this.plate, 0, -200);
+        console.log('win: drop nugget chicken');
     }
 
     private addLogo() {
@@ -159,17 +173,6 @@ export class Game extends Scene {
             frier.setInteractive();
             frier.setName(`frier_${i}`);
             this.frierList.push(frier);
-
-            // this.input.on('gameobjectover', (pointer, obj) => {
-            //     if(obj?.name === 'chicken') return;
-            //     this.targetFrier = obj;
-            //     console.log(obj.name)
-            // });
-
-            // this.input.on('gameobjectout', (pointer, obj) => {
-            //     this.targetFrier = null;
-            //     // console.log(obj.name)
-            // });
         }
 
         this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.3);

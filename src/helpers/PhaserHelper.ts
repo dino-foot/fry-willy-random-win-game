@@ -1,8 +1,8 @@
 import * as Phaser from 'phaser';
-import { RectData, TextObject } from '../types';
+import { RectData, TextObject, vector2 } from '../types';
 
 export class PhaserHelpers {
-   
+
     constructor() { }
 
     static createContainer(scene: Phaser.Scene, width: number, height: number, debugFill?: boolean): Phaser.GameObjects.Container {
@@ -61,7 +61,7 @@ export class PhaserHelpers {
 
     static addText(textData: TextObject, context: Phaser.Scene): Phaser.GameObjects.Text {
         const { x, y, text, style, origin, angle, wordWrapWidth, lineHeight, depth, isInterActive } = textData;
-    
+
         const textStyle = style || null;
         const textObject = context.add.text(x || 0, y || 0, text || '', textStyle);
         if (origin) textObject.setOrigin(origin.x, origin.y);
@@ -70,9 +70,9 @@ export class PhaserHelpers {
         if (lineHeight != null) textObject.setLineSpacing(lineHeight);
         if (isInterActive != null) textObject.setInteractive();
         if (depth) textObject.depth = depth;
-    
+
         return textObject;
-      }
+    }
 
     static destroyAll(items: Phaser.GameObjects.GameObject[]): void {
         items.forEach((item) => item.destroy());
@@ -90,5 +90,12 @@ export class PhaserHelpers {
     static randomizeString(str: string): string {
         const arr = str.split('');
         return PhaserHelpers.randomizeArray(arr).join('');
+    }
+
+    static getRandomPointAt(center: vector2, radius: number): vector2 {
+        const angle = Math.random() * Math.PI * 2;
+        const randomX = center.x + Math.cos(angle) * Math.random() * radius;
+        const randomY = center.y + Math.sin(angle) * Math.random() * radius;
+        return { x: randomX, y: randomY };
     }
 }
