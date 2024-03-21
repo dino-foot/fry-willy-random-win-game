@@ -175,7 +175,7 @@ export class Game extends Scene {
             this.chicken.setVisible(true);
         }, 1200)
 
-        console.log('win: drop nugget chicken');
+        console.log('drop nuggets');
     }
 
     private updateCreditNScore() {
