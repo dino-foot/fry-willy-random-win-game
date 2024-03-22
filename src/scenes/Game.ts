@@ -6,12 +6,14 @@ export class Game extends Scene {
     camera: Cameras.Scene2D.Camera;
     background: GameObjects.Image;
     logo: GameObjects.Image;
+    pattern: GameObjects.Image;
+    rect: GameObjects.Graphics;
 
+    gameWidth: number;
+    gameHeight: number;
     isDeskTop: boolean;
     isLandscape: boolean;
     currentOrienation: Scale.Orientation;
-    gameWidth: number;
-    gameHeight: number;
 
     totalCredit: number;
     currentScore: number;
@@ -30,14 +32,13 @@ export class Game extends Scene {
     }
 
     init() {
-        this.isDeskTop = this.sys.game.device.os.desktop;
-        this.isLandscape = this.scale.orientation === Scale.Orientation.LANDSCAPE;
-        this.currentOrienation = this.scale.orientation;
-
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
 
-        this.cameras.main.setBackgroundColor(0x00defc);
+        this.isDeskTop = this.sys.game.device.os.desktop;
+        this.isLandscape = this.scale.orientation === Scale.Orientation.LANDSCAPE;
+        this.currentOrienation = this.scale.orientation;
+        this.scale.on('orientationchange', this.checkOrientation, this);
 
         this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
         // const sprite = this.add.sprite(400, 300, 'eye').setInteractive({ cursor: 'url(assets/input/cursors/pen.cur), pointer' });
@@ -47,23 +48,33 @@ export class Game extends Scene {
         this.totalCredit = 2;
         this.currentScore = 0;
         this.frierList = []
-
         this.camera = this.cameras.main;
+
         this.addLogo();
         this.createBackground();
+        if (this.isLandscape) this.landscapeRect();
+        else this.portraitRect();
         
-        const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
-        PhaserHelpers.addRoundedRectangle(rectConfig, this);
-
-        this.createFriers()
+        // this.createFriers()
 
         // create chicken
-        this.createChicken();
+        // this.createChicken();
         this.createLevel();
 
         this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
         this.scoreText = this.addText(`Current Score: ${this.currentScore}`, 180, 100);
 
+    }
+
+    private landscapeRect() {
+        const rectConfig = { x: this.camera.centerX / 2 - 200, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 1400, height: 800, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
+        this.rect = PhaserHelpers.addRoundedRectangle(rectConfig, this);
+
+    }
+
+    private portraitRect() {
+        const rectConfig = { x: this.camera.centerX / 2 - 170, y: this.camera.centerY / 2 - (this.gameHeight / 10), width: 700, height: 1100, radius: 20, color: 0xffffff, stroke: 5, strokeColor: 0x000000 };
+        this.rect = PhaserHelpers.addRoundedRectangle(rectConfig, this);
     }
 
     private createLevel() {
@@ -72,18 +83,18 @@ export class Game extends Scene {
         maskRect.setVisible(true);
         let mask = maskRect.createGeometryMask();
 
-        const bg = this.add.image(this.camera.centerX, this.camera.centerY - 130, 'bg-desktop').setOrigin(0.5).setDepth(1);
-        bg.setScale(1.4);
-        bg.setMask(mask);
+        // const bg = this.add.image(this.camera.centerX, this.camera.centerY - 130, 'bg-desktop').setOrigin(0.5).setDepth(1);
+        // bg.setScale(1.4);
+        // bg.setMask(mask);
 
-        maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 525, 1370, 340, 0x000000);
-        maskRect.setStrokeStyle(20, 0x000000);
-        maskRect.setVisible(false);
-        mask = maskRect.createGeometryMask();
+        // maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 525, 1370, 340, 0x000000);
+        // maskRect.setStrokeStyle(20, 0x000000);
+        // maskRect.setVisible(false);
+        // mask = maskRect.createGeometryMask();
 
-        const pattern = this.add.image(this.camera.centerX, this.camera.centerY - 70, 'pattern-desktop').setOrigin(0.5).setDepth(1);
-        pattern.setScale(1.25);
-        pattern.setMask(mask);
+        // this.pattern = this.add.image(this.camera.centerX, this.camera.centerY - 70, 'pattern-desktop').setOrigin(0.5).setDepth(1);
+        // this.pattern.setScale(1.25);
+        // this.pattern.setMask(mask);
     }
 
     private createChicken() {
@@ -179,12 +190,13 @@ export class Game extends Scene {
     private addLogo() {
         this.logo = this.add.image(0, 0, 'logo');
         this.logo.setScale(0.3).setDepth(2);
-        Display.Align.In.TopCenter(this.logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, 0);
-        this.logo.y = 160
+        let offsetY = this.isLandscape ? 300 : 450;
+        Display.Align.In.TopCenter(this.logo, this.add.zone(this.camera.centerX, this.camera.centerY, this.gameWidth, this.gameHeight), 0, offsetY);
     }
 
     private createBackground() {
-        this.background = this.add.image(this.camera.centerX, this.camera.centerY, 'sky_desktop');
+        const key = this.isLandscape ? 'sky_desktop' : 'sky_mobile';
+        this.background = this.add.image(this.camera.centerX, this.camera.centerY, key);
         this.background.setOrigin(0.5);
     }
 
@@ -215,11 +227,25 @@ export class Game extends Scene {
 
         if (this.currentOrienation !== orientation) {
             this.currentOrienation = this.scale.orientation;
-            // this.updateGameSize();
-            // this.scale.refresh();
-            // redraw 
-            // this.cleanupLayout();
-            // this.cameras.main.fadeIn(800, 0, 0, 0);
+            this.updateGameSize();
+
+            //cleanup and redraw 
+            this.logo?.destroy();
+            this.background?.destroy();
+            this.cameras.main.fadeIn(800, 0, 0, 0);
+        }
+
+        if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
+            // console.log('landscape');
+            // this.landscapeLayout();
+
+        } else if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.PORTRAIT) {
+            // console.log('portrait');
+            // this.portraitLayout();
+        }
+        else {
+            // desktop
+            // this.landscapeLayout();
         }
 
         this.scale.refresh();

@@ -36,7 +36,7 @@ export class MainMenu extends Scene {
         this.drawLayout();
 
         // debug
-        // this.scene.start('Game');
+        this.scene.start('Game');
     }
 
 
@@ -96,7 +96,7 @@ export class MainMenu extends Scene {
 
             // redraw 
             this.cleanupLayout();
-            this.cameras.main.fadeIn(800, 0, 0, 0);
+            this.cameras?.main?.fadeIn(800, 0, 0, 0);
         }
 
         if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
