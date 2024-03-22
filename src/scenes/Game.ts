@@ -23,6 +23,7 @@ export class Game extends Scene {
 
     plate: GameObjects.Image;
     frierList: GameObjects.Image[];
+    objectList: any; // loop through 
     hand: GameObjects.Image;
     chicken: GameObjects.Image;
     WIN_INDEX: number;
@@ -47,7 +48,7 @@ export class Game extends Scene {
     }
 
     create() {
-        this.totalCredit = 10;
+        this.totalCredit = 5;
         this.currentScore = 0;
         this.frierList = []
         this.camera = this.cameras.main;
@@ -56,7 +57,7 @@ export class Game extends Scene {
         this.createBackground();
         if (this.isLandscape) this.landscapeRect();
         else this.portraitRect();
-        
+
         this.createFriers()
 
         // create chicken
@@ -80,11 +81,11 @@ export class Game extends Scene {
     }
 
     private createLevel() {
-        let width = this.isLandscape ? 1370: 660;
+        let width = this.isLandscape ? 1370 : 660;
         let height = this.isLandscape ? 440 : 730;
         let offsetX = this.isLandscape ? 500 : 180;
         let offsetY = this.isLandscape ? 130 : 280;
-        
+
         let maskRect = this.add.rectangle(this.camera.centerX / 2 + offsetX, this.camera.centerY / 2 + offsetY, width, height, 0x000000);
         maskRect.setStrokeStyle(20, 0x000000);
         maskRect.setVisible(false);
@@ -228,10 +229,8 @@ export class Game extends Scene {
             // frier.setDepth(101);
             frier.setName(`frier_${i}`);
             this.frierList.push(frier);
-
             let textOffsetX = this.isLandscape ? 400 : 200;
             const text = this.addText((i + 1).toString(), textOffsetX * i + (this.isLandscape ? 600 : 180), this.isLandscape ? 680 : 1000, '#fecb37', 60)
-            // text.setDepth(102);
             text.setStroke('#000000', 15);
         }
 
@@ -253,22 +252,39 @@ export class Game extends Scene {
             this.updateGameSize();
 
             //cleanup and redraw 
-            this.logo?.destroy();
-            this.background?.destroy();
+            this.children.getAll().forEach(item => {
+                item.destroy()
+            });
+            this.frierList = [];
             this.cameras?.main?.fadeIn(800, 0, 0, 0);
         }
 
         if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
             // console.log('landscape');
-            // this.landscapeLayout();
+            this.addLogo();
+            this.createBackground();
+            this.landscapeRect();
+            this.createFriers()
+            this.createChicken();
+            this.createLevel();
 
         } else if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.PORTRAIT) {
             // console.log('portrait');
-            // this.portraitLayout();
+            this.addLogo();
+            this.createBackground();
+            this.portraitRect();
+            this.createFriers()
+            this.createChicken();
+            this.createLevel();
         }
         else {
             // desktop
-            // this.landscapeLayout();
+            this.addLogo();
+            this.createBackground();
+            this.landscapeRect();
+            this.createFriers()
+            this.createChicken();
+            this.createLevel();
         }
 
         this.scale.refresh();
