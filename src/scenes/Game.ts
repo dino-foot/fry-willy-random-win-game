@@ -55,10 +55,10 @@ export class Game extends Scene {
         if (this.isLandscape) this.landscapeRect();
         else this.portraitRect();
         
-        // this.createFriers()
+        this.createFriers()
 
         // create chicken
-        // this.createChicken();
+        this.createChicken();
         this.createLevel();
 
         this.creditText = this.addText(`Total Credit: ${this.totalCredit}`, 180, 50);
@@ -78,27 +78,43 @@ export class Game extends Scene {
     }
 
     private createLevel() {
-        let maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 130, 1370, 440, 0x000000);
+        let width = this.isLandscape ? 1370: 660;
+        let height = this.isLandscape ? 440 : 730;
+        let offsetX = this.isLandscape ? 500 : 180;
+        let offsetY = this.isLandscape ? 130 : 280;
+        
+        let maskRect = this.add.rectangle(this.camera.centerX / 2 + offsetX, this.camera.centerY / 2 + offsetY, width, height, 0x000000);
         maskRect.setStrokeStyle(20, 0x000000);
-        maskRect.setVisible(true);
+        maskRect.setVisible(false);
         let mask = maskRect.createGeometryMask();
 
-        // const bg = this.add.image(this.camera.centerX, this.camera.centerY - 130, 'bg-desktop').setOrigin(0.5).setDepth(1);
-        // bg.setScale(1.4);
-        // bg.setMask(mask);
+        offsetY = this.isLandscape ? 130 : 250;
+        let key = this.isLandscape ? 'bg-desktop' : 'bg-mobile';
+        const bg = this.add.image(this.camera.centerX, this.camera.centerY - offsetY, key).setOrigin(0.5).setDepth(1);
+        bg.setScale(this.isLandscape ? 1.25 : 1);
+        bg.setMask(mask);
 
-        // maskRect = this.add.rectangle(this.camera.centerX / 2 + 500, this.camera.centerY / 2 + 525, 1370, 340, 0x000000);
-        // maskRect.setStrokeStyle(20, 0x000000);
-        // maskRect.setVisible(false);
-        // mask = maskRect.createGeometryMask();
+        offsetY = this.isLandscape ? 525 : 780;
+        height = this.isLandscape ? 340 : 380;
+        maskRect = this.add.rectangle(this.camera.centerX / 2 + offsetX, this.camera.centerY / 2 + offsetY, width, height, 0x000000);
+        maskRect.setStrokeStyle(20, 0x000000);
+        maskRect.setVisible(false);
+        mask = maskRect.createGeometryMask();
 
-        // this.pattern = this.add.image(this.camera.centerX, this.camera.centerY - 70, 'pattern-desktop').setOrigin(0.5).setDepth(1);
-        // this.pattern.setScale(1.25);
-        // this.pattern.setMask(mask);
+        key = this.isLandscape ? 'pattern-desktop' : 'pattern-mobile';
+        offsetY = this.isLandscape ? 70 : -140;
+        this.pattern = this.add.image(this.camera.centerX, this.camera.centerY - offsetY, key).setOrigin(0.5).setDepth(1);
+        this.pattern.setScale(this.isLandscape ? 1.25 : 1);
+        this.pattern.setMask(mask);
+        // this.pattern.setDepth(1);
     }
 
     private createChicken() {
-        this.chicken = this.add.image(450, 450, 'chicken_willy').setDepth(6).setOrigin(0.5);
+        let posX = this.isLandscape ? 450 : 100;
+        let posY = this.isLandscape ? 450 : 800;
+
+        this.chicken = this.add.image(posX, posY, 'chicken_willy').setDepth(6).setOrigin(0.5);
+        // Display.Align.In.TopCenter(this.chicken, this.frierList[0], 0, -800);
         this.chicken.setInteractive();
         this.chicken.setScale(0.12);
         this.chicken.setName('chicken');
@@ -202,18 +218,23 @@ export class Game extends Scene {
 
     private createFriers() {
 
-        let offsetX = 400;
+        let offsetX = this.isLandscape ? 400 : -200;
+        let offsetY = this.isLandscape ? 750 : 1100;
         for (let i = 0; i < 3; i++) {
-            const text = this.addText((i + 1).toString(), offsetX * i + 600, 680, '#fecb37', 60).setDepth(6);
-            text.setStroke('#000000', 15);
-            const frier = this.add.image(offsetX * i + 550, 750, 'frier').setOrigin(0.5).setDepth(4).setScale(0.35);
+            const frier = this.add.image(offsetX * i + 550, offsetY, 'frier').setOrigin(0.5).setDepth(4).setScale(0.35);
             frier.setInteractive();
+            // frier.setDepth(101);
             frier.setName(`frier_${i}`);
             this.frierList.push(frier);
+
+            let textOffsetX = this.isLandscape ? 400 : 200;
+            const text = this.addText((i + 1).toString(), textOffsetX * i + (this.isLandscape ? 600 : 180), this.isLandscape ? 680 : 1000, '#fecb37', 60)
+            // text.setDepth(102);
+            text.setStroke('#000000', 15);
         }
 
         this.plate = this.add.image(0, 0, 'plate').setDepth(4).setScale(0.3);
-        Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, 120);
+        Display.Align.In.BottomCenter(this.plate, this.frierList[1], 0, this.isLandscape ? 120 : 100);
 
         this.winText = this.addText('', 0, 0, '#fecb37', 70);
         this.winText.setDepth(100);
@@ -232,7 +253,7 @@ export class Game extends Scene {
             //cleanup and redraw 
             this.logo?.destroy();
             this.background?.destroy();
-            this.cameras.main.fadeIn(800, 0, 0, 0);
+            this.cameras?.main?.fadeIn(800, 0, 0, 0);
         }
 
         if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
