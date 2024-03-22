@@ -36,7 +36,7 @@ export class MainMenu extends Scene {
         this.drawLayout();
 
         // debug
-        this.scene.start('Game');
+        // this.scene.start('Game');
     }
 
 

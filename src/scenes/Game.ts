@@ -41,11 +41,13 @@ export class Game extends Scene {
         this.scale.on('orientationchange', this.checkOrientation, this);
 
         this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
+
+        // this.scene.start('GameOver');
         // const sprite = this.add.sprite(400, 300, 'eye').setInteractive({ cursor: 'url(assets/input/cursors/pen.cur), pointer' });
     }
 
     create() {
-        this.totalCredit = 2;
+        this.totalCredit = 10;
         this.currentScore = 0;
         this.frierList = []
         this.camera = this.cameras.main;
