@@ -19,7 +19,7 @@ export class GameOver extends Scene {
 
     create() {
         this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
-        
+
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
 
@@ -28,8 +28,7 @@ export class GameOver extends Scene {
         this.currentOrienation = this.scale.orientation;
         this.scale.on('orientationchange', this.checkOrientation, this);
 
-
-        this.camera = this.cameras.main
+        this.camera = this.cameras.main;
         this.createLevel();
     }
 
@@ -75,7 +74,7 @@ export class GameOver extends Scene {
 
         if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.LANDSCAPE) {
             // console.log('landscape');
-           this.createLevel()
+            this.createLevel()
 
         } else if (!this.isDeskTop && this.currentOrienation === Scale.Orientation.PORTRAIT) {
             // console.log('portrait');
