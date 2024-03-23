@@ -206,6 +206,8 @@ export class Game extends Scene {
         setTimeout(() => {
             const frier = this.frierList[Phaser.Math.Between(0, 2)];
             this.chicken?.setPosition(frier.x, this.chicken.y - 300);
+            this.chicken.setScale(0.12);
+            this.chicken.setTexture('chicken_willy');
             this.chicken?.setVisible(true);
         }, 1200)
 
