@@ -29,6 +29,8 @@ export class MainMenu extends Scene {
         this.isLandscape = this.scale.orientation === Scale.Orientation.LANDSCAPE;
         this.currentOrienation = this.scale.orientation;
         this.scale.on('orientationchange', this.checkOrientation, this);
+        
+        this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
     }
 
     create() {

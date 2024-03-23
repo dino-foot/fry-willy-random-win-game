@@ -125,12 +125,16 @@ export class Game extends Scene {
 
 
         this.input.on('dragstart', (pointer, gameObject, dragX, dragY) => {
+            this.chicken.setTexture('willy-strangled-2');
+            this.chicken.setScale(0.15);
             gameObject.x = pointer.x;
             gameObject.y = pointer.y;
+            this.input.setDefaultCursor('url(/assets/like.cur), pointer');
             // console.log('#dragstart');
         });
 
         this.input.on('dragend', (pointer, gameObject, dragX, dragY) => {
+            this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
             // Define a variable to store the index of the overlapped frier
             let overlappedIndex = -1;
 
@@ -149,6 +153,8 @@ export class Game extends Scene {
                 this.chicken.y = this.frierList[overlappedIndex].y;
                 this.handleChickenDrop(overlappedIndex);
             } else {
+                this.chicken.setScale(0.12);
+                this.chicken.setTexture('chicken_willy');
                 // If no overlapped frier was found, reset the position of the gameObject
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
