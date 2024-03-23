@@ -189,6 +189,14 @@ export class Game extends Scene {
             tweenPosition(this, wings, { x: randomPos.x, y: randomPos.y }, { duration: 600, delay: 100 * i });
         }
 
+        // empty plate animation
+        if(randomNuggets === 0) {
+            const emptyPlate = this.add.image(this.chicken.x,  -400, 'plate').setDepth(4);
+            emptyPlate.setOrigin(0.5);
+            emptyPlate.setScale(0.3);
+            tweenPosition(this, emptyPlate, { x: this.plate.x, y: this.plate.y }, { duration: 600, delay: 100, scale: 0.3 });
+        }
+
         this.winText?.setText(`${this.currentScore} Willy nuggets`);
         this.updateCreditNScore()
 
