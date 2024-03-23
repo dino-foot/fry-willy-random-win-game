@@ -23,7 +23,6 @@ export class Game extends Scene {
 
     plate: GameObjects.Image;
     frierList: GameObjects.Image[];
-    objectList: any; // loop through 
     hand: GameObjects.Image;
     chicken: GameObjects.Image;
     WIN_INDEX: number;
