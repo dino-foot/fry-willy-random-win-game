@@ -18,6 +18,8 @@ export class GameOver extends Scene {
     }
 
     create() {
+        this.input.setDefaultCursor('url(/assets/hand.cur), pointer');
+        
         this.gameWidth = Number(this.game.config.width);
         this.gameHeight = Number(this.game.config.height);
 
