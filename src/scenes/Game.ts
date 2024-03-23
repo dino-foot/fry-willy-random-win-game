@@ -189,10 +189,8 @@ export class Game extends Scene {
         }
 
         // empty plate animation
-        if(randomNuggets === 0) {
-            const emptyPlate = this.add.image(this.chicken.x,  -400, 'plate').setDepth(4);
-            emptyPlate.setOrigin(0.5);
-            emptyPlate.setScale(0.3);
+        if (randomNuggets === 0) {
+            const emptyPlate = this.add.image(this.chicken.x, -400, 'plate').setDepth(4).setOrigin(0.5).setScale(0.3);
             tweenPosition(this, emptyPlate, { x: this.plate.x, y: this.plate.y }, { duration: 600, delay: 100, scale: 0.3 });
         }
 
